@@ -1,0 +1,5 @@
+quaternion
+numpy
+matplotlib 
+VPython
+PyVista

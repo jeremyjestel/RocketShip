@@ -1,9 +1,8 @@
 from dataclasses import dataclass, field
 import numpy as np
-import quaternion  
 
 @dataclass
-class Rocket:
+class Rocket():
     name: str = ""
 
     # Position 
@@ -13,8 +12,8 @@ class Rocket:
     velocity: np.ndarray = field(default_factory=lambda: np.zeros(3))  # [vx, vy, vz]
 
     # Orientation 
-    orientation: np.quaternion = field(default_factory=lambda: np.quaternion(1, 0, 0, 0))
-
+    orientation: np.ndarray = field(default_factory=lambda: np.array([1.0,0.0,0.0,0.0]))
+    
     # Angular velocity 
     angular_velocity: np.ndarray = field(default_factory=lambda: np.zeros(3))  # [wx, wy, wz]
 
