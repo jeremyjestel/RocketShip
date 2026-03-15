@@ -21,7 +21,7 @@ class Gyroscope:
         omega_world = self.vehicle.state.true_ang_vel  # [wx, wy, wz]
 
         # Convert to body frame
-        omega_body = self.vehicle.state.orientation.inv().apply(omega_world)
+        omega_body = self.vehicle.state.true_orientation.inv().apply(omega_world)
 
         # Add Gaussian noise
         noise = np.random.normal(0, self.noise_std, 3)

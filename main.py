@@ -13,11 +13,12 @@ from visualizer import Visualizer
 from scipy.spatial.transform import Rotation as R
 from sense import Sensor
 
+#user adjusted params
 init_mass = 549000
 percent_fuel = .33
-
 starting_pos = np.array([0., 0., 0.])
 starting_vel = np.array([0., 0., 0.])
+starting_ang_vel = np.array([0., 0., 0.])
 starting_orientation = R.from_euler('x', 0, degrees=True)
 
 env = Environment(
@@ -29,8 +30,14 @@ rocket = Rocket(
     state = State(
         true_pos=starting_pos,
         true_vel=starting_vel,
+        true_ang_vel=starting_ang_vel,
         true_orientation=starting_orientation,
-        current_mass=init_mass
+        belief_pos=starting_pos,
+        belief_vel=starting_vel,
+        belief_ang_vel=starting_ang_vel,
+        belief_orientation=starting_orientation,
+        current_mass=init_mass,
+        current_fuel_mass=init_mass * percent_fuel
     ),
     mass_props=MassProperties(
         init_mass,
@@ -48,19 +55,21 @@ visualizer = Visualizer(logger)
 physics = PhysicsEngine()
 sensors = Sensor(rocket)
 
-dt = 0.01       # timestep because sim is 100 hz
+
 ts = 0.0   #timestamp
+dt = 0.01       # timestep because sim is 100 hz
 sim_time = .1   # total simulation time in seconds
 
 
 while ts < sim_time:
+    if rocket.state.current_fuel_mass < 0:
+        break
+
     #need to update the world, then make decisions and measurements after
     physics.step_linear(rocket, env, dt)
     physics.step_rotational(rocket, dt)
 
-    sensor_data = sensors.read_sensors()
-
-
+    sensor_data = sensors.read_sensors(ts)
 
     logger.log(rocket, ts)
     ts += dt

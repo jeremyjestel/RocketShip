@@ -19,7 +19,7 @@ class GPS:
         self.velocity = np.zeros(3)
 
     def measure(self, time):
-        if time - self.last_update_time >= self.update_interval:
+        if time - self.last_update_time >= self.update_interval: #because gps refresh lower hz then sim timestep
             # Position measurement
             pos_noise = np.array([
                 np.random.normal(0, self.horiz_std),

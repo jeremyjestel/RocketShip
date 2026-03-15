@@ -9,7 +9,7 @@ class Accelerometer:
     def measure(self):
 
         # convert acceleration from world frame to body frame
-        accel_body = self.vehicle.state.orientation.inv().apply(self.vehicle.true_accel)
+        accel_body = self.vehicle.state.true_orientation.inv().apply(self.vehicle.state.true_accel)
 
         # add noise
         noise = np.random.normal(0, self.std, 3)

@@ -25,6 +25,7 @@ class State:
     belief_orientation: R = field(default_factory=R.identity)   # scipy rotaion, updated with angular velocity
 
     current_mass: float = 1000
+    current_fuel_mass: float = 1000
 
     def update_state(self, accel, dt, burn_rate):
         self.true_accel = accel
@@ -32,4 +33,5 @@ class State:
         self.true_pos += self.true_vel * dt
 
         self.current_mass -= burn_rate * dt
+        self.current_fuel_mass -= burn_rate * dt
 

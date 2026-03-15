@@ -15,9 +15,9 @@ class Sensor:
         self.std_vel = .2
 
 
-    def read_sensors(self):
+    def read_sensors(self, ts):
         #gps
-        measured_GPS_pos, measured_GPS_vel = self.GPS.measure(self.vehicle)
+        measured_GPS_pos, measured_GPS_vel = self.GPS.measure(ts)
 
         #IMU
         measured_accel = self.accelerometer.measure()
