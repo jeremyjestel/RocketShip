@@ -1,7 +1,7 @@
 # main.py
 
 import numpy as np
-from vehicle import Vehicle
+from vehicle import Rocket
 from state import State
 from mass_properties import MassProperties
 from engine import Engine
@@ -18,12 +18,12 @@ env = Environment(
     wind=np.array([0., 0., 0.])         # m/s, affects air resistance drag
 )
 
-rocket = Vehicle(
+rocket = Rocket(
     name="TestRocket",
     state=State(
-        position=np.array([0., 0., 0.]),
-        velocity=np.array([0., 0., 0.]), 
-        orientation = R.from_euler('x', -10, degrees=True)
+        true_pos=np.array([0., 0., 0.]),
+        true_vel=np.array([0., 0., 0.]), 
+        true_orientation = R.from_euler('x', -10, degrees=True)
     ),
     mass_props=MassProperties(
         mass=549000,
@@ -50,10 +50,7 @@ while ts < sim_time:
     physics.step_linear(rocket, env, dt)
     physics.step_rotational(rocket, dt)
 
-    #imu step here alway
-
-    #gps
-    gps_measured_pos, gps_measured_vel = sensors.gps_measure()
+    sensor_data = sensors.read_sensors()
 
 
 

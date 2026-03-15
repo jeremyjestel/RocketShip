@@ -1,4 +1,4 @@
-from vehicle import Vehicle
+from vehicle import Rocket
 from environment import Environment
 import numpy as np
 from scipy.spatial.transform import Rotation as R
@@ -6,18 +6,18 @@ from scipy.spatial.transform import Rotation as R
 
 class PhysicsEngine:
     #all newtons
-    def compute_forces(self, vehicle: Vehicle, env: Environment):
+    def compute_forces(self, vehicle: Rocket, env: Environment):
         #thrust
         thrust_body = vehicle.engine.get_thrust()
-        F_thrust = vehicle.state.orientation.apply(thrust_body)
+        F_thrust = vehicle.state.true_orientation.apply(thrust_body)
 
         
         # force of gravity
-        F_grav = env.get_gravity(vehicle.state.position) * vehicle.mass_props.mass
+        F_grav = env.get_gravity(vehicle.state.true_pos) * vehicle.mass_props.mass
 
         # force of drag adjusted for wind
         drag_coefficient = .4 #ai suggested .3-.5 for rocket
-        vel_wind_rel = vehicle.state.velocity - env.wind
+        vel_wind_rel = vehicle.state.true_vel - env.wind
         v = np.linalg.norm(vel_wind_rel)
         A = 10  #this equation is A = pi * r ^ 2, is m ^ 2
 
@@ -30,14 +30,14 @@ class PhysicsEngine:
         total_force = F_thrust + F_grav + F_air_resist
         return total_force
 
-    def step_linear(self, vehicle: Vehicle, env: Environment, dt: float):
+    def step_linear(self, vehicle: Rocket, env: Environment, dt: float):
         F_total = self.compute_forces(vehicle, env)
-        acc = F_total / vehicle.mass_props.mass
-        vehicle.state.update_state(acc, dt)
+        true_accel = F_total / vehicle.mass_props.mass
+        vehicle.state.update_state(true_accel, dt)
 
-    def step_rotational(self, vehicle: Vehicle, dt: float):
-        vehicle.state.angular_velocity += vehicle.state.angular_acceleration * dt  # rad/s
+    def step_rotational(self, vehicle: Rocket, dt: float):
+        vehicle.state.true_ang_vel += vehicle.state.true_ang_accel * dt  # rad/s
         
         # update orientation
-        delta_orientation = R.from_rotvec(vehicle.state.angular_velocity * dt)
-        vehicle.state.orientation = delta_orientation * vehicle.state.orientation
+        delta_orientation = R.from_rotvec(vehicle.state.true_ang_vel * dt)
+        vehicle.state.true_orientation = delta_orientation * vehicle.state.true_orientation

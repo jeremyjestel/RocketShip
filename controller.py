@@ -1,6 +1,6 @@
-from vehicle import Vehicle
+from vehicle import Rocket
 class Controller:
-    def __init__(self, vehicle: Vehicle):
+    def __init__(self, vehicle: Rocket):
         self.vehicle = vehicle
 
     def compute_commands(self):
