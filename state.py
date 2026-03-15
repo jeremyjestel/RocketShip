@@ -24,8 +24,12 @@ class State:
     belief_ang_accel: np.ndarray = field(default_factory=lambda: np.zeros(3))#leaving zeroes for now, hardcoded and doesn't change yet
     belief_orientation: R = field(default_factory=R.identity)   # scipy rotaion, updated with angular velocity
 
-    def update_state(self, accel, dt):
+    current_mass: float = 1000
+
+    def update_state(self, accel, dt, burn_rate):
         self.true_accel = accel
         self.true_vel += self.true_accel * dt
         self.true_pos += self.true_vel * dt
+
+        self.current_mass -= burn_rate * dt
 

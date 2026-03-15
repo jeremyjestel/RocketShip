@@ -13,7 +13,7 @@ class PhysicsEngine:
 
         
         # force of gravity
-        F_grav = env.get_gravity(vehicle.state.true_pos) * vehicle.mass_props.mass
+        F_grav = env.get_gravity(vehicle.state.true_pos) * vehicle.state.current_mass
 
         # force of drag adjusted for wind
         drag_coefficient = .4 #ai suggested .3-.5 for rocket
@@ -32,8 +32,8 @@ class PhysicsEngine:
 
     def step_linear(self, vehicle: Rocket, env: Environment, dt: float):
         F_total = self.compute_forces(vehicle, env)
-        true_accel = F_total / vehicle.mass_props.mass
-        vehicle.state.update_state(true_accel, dt)
+        true_accel = F_total / vehicle.state.current_mass
+        vehicle.state.update_state(true_accel, dt, vehicle.mass_props.burn_rate)
 
     def step_rotational(self, vehicle: Rocket, dt: float):
         vehicle.state.true_ang_vel += vehicle.state.true_ang_accel * dt  # rad/s

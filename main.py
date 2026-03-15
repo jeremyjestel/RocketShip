@@ -13,6 +13,12 @@ from visualizer import Visualizer
 from scipy.spatial.transform import Rotation as R
 from sense import Sensor
 
+init_mass = 549000
+percent_fuel = .33
+
+starting_pos = np.array([0., 0., 0.])
+starting_vel = np.array([0., 0., 0.])
+starting_orientation = R.from_euler('x', 0, degrees=True)
 
 env = Environment(
     wind=np.array([0., 0., 0.])         # m/s, affects air resistance drag
@@ -20,14 +26,16 @@ env = Environment(
 
 rocket = Rocket(
     name="TestRocket",
-    state=State(
-        true_pos=np.array([0., 0., 0.]),
-        true_vel=np.array([0., 0., 0.]), 
-        true_orientation = R.from_euler('x', -10, degrees=True)
+    state = State(
+        true_pos=starting_pos,
+        true_vel=starting_vel,
+        true_orientation=starting_orientation,
+        current_mass=init_mass
     ),
     mass_props=MassProperties(
-        mass=549000,
-        center_of_mass=np.array([0., 0., 0.])
+        init_mass,
+        percent_fuel,
+        burn_rate = 5.0
     ),
     engine=Engine(
         throttle=1         # fully on
