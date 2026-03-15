@@ -9,13 +9,14 @@ class PhysicsEngine:
         total_force = thrust + gravity
         return total_force
 
-    def integrate_linear(self, vehicle: Vehicle, env: Environment, dt: float):
-        acc = self.compute_forces(vehicle, env) / vehicle.mass_props.mass
+    def step_linear(self, vehicle: Vehicle, env: Environment, dt: float):
+        F_total = self.compute_forces(vehicle, env)
+        acc = F_total / vehicle.mass_props.mass
         vehicle.state.acceleration = acc
         vehicle.state.velocity += acc * dt
         vehicle.state.position += vehicle.state.velocity * dt
 
-    def integrate_rotational(self, vehicle: Vehicle, dt: float):
+    def step_rotational(self, vehicle: Vehicle, dt: float):
         # Placeholder: simple angular integration
         vehicle.state.angular_velocity += vehicle.state.angular_acceleration * dt
         # orientation update will come later (quaternion math)
