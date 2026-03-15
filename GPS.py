@@ -1,15 +1,9 @@
 import numpy as np
 
 class GPS:
-    def __init__(self, vehicle):
-        """
-        GPS sensor simulation.
-
-        vehicle: the rocket object
-        update_rate: Hz, how often GPS updates
-        """
+    def __init__(self, vehicle):        
+        self.update_rate = 5 #hz hardcoded for now
         self.vehicle = vehicle
-        self.update_rate = 5 #hz
         self.update_interval = 1.0 / self.update_rate  # seconds
         self.last_update_time = 0.0
 
