@@ -1,0 +1,85 @@
+ROCKET SIMULATION VARIABLES AND UNITS
+
+STATE VARIABLES
+position_x : meters (m)
+position_y : meters (m)
+position_z : meters (m)
+
+velocity_x : meters per second (m/s)
+velocity_y : meters per second (m/s)
+velocity_z : meters per second (m/s)
+
+acceleration_x : meters per second squared (m/s^2)
+acceleration_y : meters per second squared (m/s^2)
+acceleration_z : meters per second squared (m/s^2)
+
+orientation : rotation object (dimensionless representation of rotation)
+angular_velocity_x : radians per second (rad/s)
+angular_velocity_y : radians per second (rad/s)
+angular_velocity_z : radians per second (rad/s)
+
+angular_acceleration_x : radians per second squared (rad/s^2)
+angular_acceleration_y : radians per second squared (rad/s^2)
+angular_acceleration_z : radians per second squared (rad/s^2)
+
+
+ROCKET PROPERTIES
+mass : kilograms (kg)
+dry_mass : kilograms (kg)
+fuel_mass : kilograms (kg)
+
+inertia_tensor : kilogram meters squared (kg*m^2)
+
+max_thrust : newtons (N)
+throttle : unitless (0–1)
+
+mass_flow_rate : kilograms per second (kg/s)
+
+nozzle_exit_area : square meters (m^2)
+exhaust_velocity : meters per second (m/s)
+
+
+ENVIRONMENT VARIABLES
+gravity : meters per second squared (m/s^2)
+
+air_density : kilograms per cubic meter (kg/m^3)
+atmospheric_pressure : pascals (Pa)
+
+wind_velocity_x : meters per second (m/s)
+wind_velocity_y : meters per second (m/s)
+wind_velocity_z : meters per second (m/s)
+
+
+FORCES
+thrust_force_x : newtons (N)
+thrust_force_y : newtons (N)
+thrust_force_z : newtons (N)
+
+gravity_force_x : newtons (N)
+gravity_force_y : newtons (N)
+gravity_force_z : newtons (N)
+
+drag_force_x : newtons (N)
+drag_force_y : newtons (N)
+drag_force_z : newtons (N)
+
+total_force_x : newtons (N)
+total_force_y : newtons (N)
+total_force_z : newtons (N)
+
+
+TORQUES
+torque_x : newton meters (N*m)
+torque_y : newton meters (N*m)
+torque_z : newton meters (N*m)
+
+
+AERODYNAMIC PARAMETERS
+drag_coefficient : unitless
+reference_area : square meters (m^2)
+
+
+SIMULATION VARIABLES
+time : seconds (s)
+time_step (dt) : seconds (s)
+simulation_steps : unitless
