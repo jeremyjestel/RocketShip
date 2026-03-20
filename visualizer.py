@@ -20,14 +20,14 @@ class Visualizer:
 
         # truth trajectory
         ax1.plot(truth_traj[:,0], truth_traj[:,1], truth_traj[:,2])
-        ax1.set_title("Rocket location truth")
+        ax1.set_title("Rocket location truth (m)")
         ax1.set_xlabel("X")
         ax1.set_ylabel("Y")
         ax1.set_zlabel("Z")
 
         # Belief trajectory
         ax2.plot(belief_traj[:,0], belief_traj[:,1], belief_traj[:,2])
-        ax2.set_title("Rocket location belief")
+        ax2.set_title("Rocket location belief (m)")
         ax2.set_xlabel("X")
         ax2.set_ylabel("Y")
         ax2.set_zlabel("Z")

@@ -69,9 +69,14 @@ while ts < sim_time:
     physics.step_physics(env, dt)
 
     #for now not caring bout the gps 
-    sensors.read_sensors(ts, dt)
+    sensors.read_sensors(ts, dt, env)
 
     logger.log(ts)
     ts += dt
+
+pos_difference_vec = logger.truth_positions[-1] - logger.belief_positions[-1]
+error = np.linalg.norm(pos_difference_vec)
+
+print("Final error: ", error)
 
 visualizer.plot_trajectory()

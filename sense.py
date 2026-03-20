@@ -11,7 +11,7 @@ class Sensor:
         self.accelerometer = Accelerometer(vehicle)
         self.gyro = Gyroscope(vehicle)
 
-    def read_sensors(self, ts, dt):
+    def read_sensors(self, ts, dt, env):
         #gps
         measured_GPS_pos, measured_GPS_vel = self.GPS.measure(ts)
 
