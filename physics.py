@@ -1,6 +1,7 @@
 from environment import Environment
 import numpy as np
 from scipy.spatial.transform import Rotation as R
+import config
 
 
 class PhysicsEngine:
@@ -17,15 +18,13 @@ class PhysicsEngine:
         F_grav = env.get_gravity(self.rocket.state.truth_pos) * self.rocket.state.current_mass
 
         # force of drag adjusted for wind
-        drag_coefficient = .4 #ai suggested .3-.5 for rocket
         vel_wind_rel = self.rocket.state.truth_vel - env.wind
         v = np.linalg.norm(vel_wind_rel)
-        A = 10  #this equation is A = pi * r ^ 2, is m ^ 2
 
         if v == 0:
             F_air_resist = np.array([0,0,0])
         else:
-            drag_mag = .5 * env.air_density * v ** 2 * drag_coefficient * A
+            drag_mag = .5 * env.air_density * v ** 2 * config.drag_coefficient * config.A
             F_air_resist = -drag_mag * (vel_wind_rel / v)
 
         F_total = F_thrust + F_grav + F_air_resist

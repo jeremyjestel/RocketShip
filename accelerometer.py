@@ -1,10 +1,11 @@
 import numpy as np
+import config
 
 class Accelerometer:
 
     def __init__(self, vehicle):
         self.vehicle = vehicle
-        self.std = 0.02  # m/s^2 noise
+        self.std = config.accelerometer_std  # m/s^2 noise
 
     def measure(self):
 
