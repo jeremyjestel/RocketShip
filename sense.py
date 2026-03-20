@@ -10,22 +10,15 @@ class Sensor:
         self.GPS = GPS(vehicle)
         self.accelerometer = Accelerometer(vehicle)
         self.gyro = Gyroscope(vehicle)
-        self.std_hor = 3.0
-        self.std_vert = 7.0
-        self.std_vel = .2
 
-
-    def read_sensors(self, ts):
+    def read_sensors(self, ts, dt):
         #gps
         measured_GPS_pos, measured_GPS_vel = self.GPS.measure(ts)
 
         #IMU
-        measured_accel = self.accelerometer.measure()
-        measured_ang_accel = self.gyro.measure()
+        self.vehicle.state.belief_accel = self.accelerometer.measure()
+        self.vehicle.state.belief_ang_accel = self.gyro.measure()
+
+        self.vehicle.state.update_belief_state(dt)
         
-        return {
-            'GPS pos': measured_GPS_pos,
-            'GPS vel': measured_GPS_vel,
-            'IMU accel': measured_accel,
-            'IMU ang accel': measured_ang_accel
-        }
+#prolly want a fuze sensors funciton down the line

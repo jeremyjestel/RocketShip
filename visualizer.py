@@ -7,14 +7,30 @@ class Visualizer:
 
     def plot_trajectory(self):
         import matplotlib.pyplot as plt
-        traj = np.array(self.logger.positions)
-        if traj.shape[0] == 0:
-            print("No data to plot.")
-            return
+        from mpl_toolkits.mplot3d import Axes3D  # needed for 3D plots
+
+        truth_traj = np.array(self.logger.truth_positions)
+        belief_traj = np.array(self.logger.belief_positions)
+
         fig = plt.figure()
-        ax = fig.add_subplot(111, projection='3d')
-        ax.plot(traj[:,0], traj[:,1], traj[:,2])
-        ax.set_xlabel("X")
-        ax.set_ylabel("Y")
-        ax.set_zlabel("Z")
+
+        # Create 2 subplots with 3D projection
+        ax1 = fig.add_subplot(1, 2, 1, projection='3d')
+        ax2 = fig.add_subplot(1, 2, 2, projection='3d')
+
+        # truth trajectory
+        ax1.plot(truth_traj[:,0], truth_traj[:,1], truth_traj[:,2])
+        ax1.set_title("Rocket location truth")
+        ax1.set_xlabel("X")
+        ax1.set_ylabel("Y")
+        ax1.set_zlabel("Z")
+
+        # Belief trajectory
+        ax2.plot(belief_traj[:,0], belief_traj[:,1], belief_traj[:,2])
+        ax2.set_title("Rocket location belief")
+        ax2.set_xlabel("X")
+        ax2.set_ylabel("Y")
+        ax2.set_zlabel("Z")
+
+        plt.tight_layout()
         plt.show()

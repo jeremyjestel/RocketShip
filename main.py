@@ -28,10 +28,10 @@ env = Environment(
 rocket = Rocket(
     name="TestRocket",
     state = State(
-        true_pos=starting_pos,
-        true_vel=starting_vel,
-        true_ang_vel=starting_ang_vel,
-        true_orientation=starting_orientation,
+        truth_pos=starting_pos,
+        truth_vel=starting_vel,
+        truth_ang_vel=starting_ang_vel,
+        truth_orientation=starting_orientation,
         belief_pos=starting_pos,
         belief_vel=starting_vel,
         belief_ang_vel=starting_ang_vel,
@@ -50,15 +50,15 @@ rocket = Rocket(
 )
 
 controller = Controller(rocket)
-logger = Logger()
+logger = Logger(rocket)
 visualizer = Visualizer(logger)
-physics = PhysicsEngine()
+physics = PhysicsEngine(rocket)
 sensors = Sensor(rocket)
 
 
 ts = 0.0   #timestamp
 dt = 0.01       # timestep because sim is 100 hz
-sim_time = .1   # total simulation time in seconds
+sim_time = 3   # total simulation time in seconds
 
 
 while ts < sim_time:
@@ -66,13 +66,12 @@ while ts < sim_time:
         break
 
     #need to update the world, then make decisions and measurements after
-    physics.step_linear(rocket, env, dt)
-    physics.step_rotational(rocket, dt)
+    physics.step_physics(env, dt)
 
-    sensor_data = sensors.read_sensors(ts)
+    #for now not caring bout the gps 
+    sensors.read_sensors(ts, dt)
 
-    logger.log(rocket, ts)
+    logger.log(ts)
     ts += dt
 
-logger.print_log()
 visualizer.plot_trajectory()
