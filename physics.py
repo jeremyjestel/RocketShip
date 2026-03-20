@@ -28,8 +28,8 @@ class PhysicsEngine:
             drag_mag = .5 * env.air_density * v ** 2 * drag_coefficient * A
             F_air_resist = -drag_mag * (vel_wind_rel / v)
 
-        total_force = F_thrust + F_grav + F_air_resist
-        return total_force
+        F_total = F_thrust + F_grav + F_air_resist
+        return F_total
 
     def step_physics(self, env: Environment, dt: float):
         F_total = self.compute_forces(env)
