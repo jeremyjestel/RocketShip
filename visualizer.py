@@ -18,6 +18,15 @@ class Visualizer:
         ax1 = fig.add_subplot(1, 2, 1, projection='3d')
         ax2 = fig.add_subplot(1, 2, 2, projection='3d')
 
+        ax1.set_xlim(truth_traj[:,0].min(), truth_traj[:,0].max())
+        ax1.set_ylim(truth_traj[:,1].min(), truth_traj[:,1].max())
+        ax1.set_zlim(truth_traj[:,2].min(), truth_traj[:,2].max())
+        ax2.set_xlim(truth_traj[:,0].min(), truth_traj[:,0].max())
+        ax2.set_ylim(truth_traj[:,1].min(), truth_traj[:,1].max())
+        ax2.set_zlim(truth_traj[:,2].min(), truth_traj[:,2].max())
+
+
+
         # truth trajectory
         ax1.plot(truth_traj[:,0], truth_traj[:,1], truth_traj[:,2])
         ax1.set_title("Rocket location truth (m)")
@@ -32,5 +41,4 @@ class Visualizer:
         ax2.set_ylabel("Y")
         ax2.set_zlabel("Z")
 
-        plt.tight_layout()
         plt.show()
