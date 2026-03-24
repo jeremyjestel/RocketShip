@@ -1,7 +1,6 @@
 # main.py
 
 import numpy as np
-from vehicle import Rocket
 from state import State
 from mass_properties import MassProperties
 from engine import Engine
@@ -12,6 +11,8 @@ from logger import Logger
 from visualizer import Visualizer
 from scipy.spatial.transform import Rotation as R
 from sense import Sensor
+from rocket import Rocket
+from estimator import Estimator
 import config
 #user adjusted params
 
@@ -48,6 +49,7 @@ logger = Logger(rocket)
 visualizer = Visualizer(logger)
 physics = PhysicsEngine(rocket)
 sensors = Sensor(rocket)
+estimator = Estimator(rocket) 
 
 ts = 0.0   #timestamp
 
@@ -59,7 +61,10 @@ while ts < config.sim_time:
     physics.step_physics(env, config.dt)
 
     #for now not caring bout the gps 
-    sensors.read_sensors(ts, config.dt, env)
+    sensor_data = sensors.read_sensors(ts)
+
+    #will be kalman filter but estimates from the noisy measurement
+    estimator.step(sensor_data, config.dt)
 
     logger.log(ts)
     ts += config.dt

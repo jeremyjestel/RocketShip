@@ -1,24 +1,35 @@
-from vehicle import Rocket
+from rocket import Rocket
 import numpy as np
 from GPS import GPS
 from gyroscope import Gyroscope
 from accelerometer import Accelerometer
 
 class Sensor:
-    def __init__(self, vehicle: Rocket):
-        self.vehicle = vehicle
-        self.GPS = GPS(vehicle)
-        self.accelerometer = Accelerometer(vehicle)
-        self.gyro = Gyroscope(vehicle)
+    def __init__(self, rocket: Rocket):
+        self.rocket = rocket
+        self.GPS = GPS(rocket)
+        self.accelerometer = Accelerometer(rocket)
+        self.gyro = Gyroscope(rocket)
 
-    def read_sensors(self, ts, dt, env):
-        #gps
-        measured_GPS_pos, measured_GPS_vel = self.GPS.measure(ts)
+    def read_sensors(self, ts):
+            # GPS
+            gps_pos, gps_vel, new_gps = self.GPS.measure(ts)
 
-        #IMU
-        self.vehicle.state.belief_accel = self.accelerometer.measure()
-        self.vehicle.state.belief_ang_accel = self.gyro.measure()
+            gps_data = None
+            if new_gps:
+                gps_data = {
+                    "pos": gps_pos,
+                    "vel": gps_vel
+                }
 
-        self.vehicle.state.update_belief_state(dt)
+            # IMU
+            imu_accel = self.accelerometer.measure()
+            imu_gyro = self.gyro.measure()
+
+            return {
+                "imu_accel": imu_accel,
+                "imu_gyro": imu_gyro,
+                "gps": gps_data
+            }
         
 #prolly want a fuze sensors funciton down the line
