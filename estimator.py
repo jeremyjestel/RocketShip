@@ -1,6 +1,6 @@
 import numpy as np
 
-class Estimator:
+class Basic_Estimator:
     def __init__(self, rocket):
         self.rocket = rocket
 

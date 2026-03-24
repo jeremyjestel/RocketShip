@@ -12,7 +12,7 @@ from visualizer import Visualizer
 from scipy.spatial.transform import Rotation as R
 from sense import Sensor
 from rocket import Rocket
-from estimator import Estimator
+from estimator import Basic_Estimator
 import config
 #user adjusted params
 
@@ -49,7 +49,7 @@ logger = Logger(rocket)
 visualizer = Visualizer(logger)
 physics = PhysicsEngine(rocket)
 sensors = Sensor(rocket)
-estimator = Estimator(rocket) 
+estimator = Basic_Estimator(rocket) 
 
 ts = 0.0   #timestamp
 
@@ -72,6 +72,6 @@ while ts < config.sim_time:
 pos_difference_vec = logger.truth_positions[-1] - logger.belief_positions[-1]
 error = np.linalg.norm(pos_difference_vec)
 
-print("Final error: ", error)
+print("Final error: ", error, " in meters")
 
-visualizer.plot_trajectory()
+visualizer.plots_window()
