@@ -1,5 +1,5 @@
 import numpy as np
-import config
+import params
 
 class Gyroscope:
     def __init__(self, vehicle):
@@ -14,7 +14,7 @@ class Gyroscope:
     def measure(self):
 
         # Add Gaussian noise
-        noise = np.random.normal(0, config.gyro_noise_std, 3)
+        noise = np.random.normal(0, params.gyro_noise_std, 3)
         noisy_ang_vel = self.vehicle.state.truth_ang_vel + noise
 
         return noisy_ang_vel

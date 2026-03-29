@@ -13,31 +13,38 @@ from scipy.spatial.transform import Rotation as R
 from sense import Sensor
 from rocket import Rocket
 from estimator import Basic_Estimator
-import config
+import params
+from vispy import scene
+from vispy.app import Timer, run
+from vispy.scene.visuals import Line
+from update import update_sim
+from step import step_sim
+from init_vis import init_vis
+from sim import Sim
 #user adjusted params
 
 env = Environment(
-    wind=config.wind        # m/s, affects air resistance drag
+    wind=params.wind        # m/s, affects air resistance drag
 )
 
 rocket = Rocket(
     name="TestRocket",
     state = State(
-        truth_pos=config.starting_pos,
-        truth_vel=config.starting_vel,
-        truth_ang_vel=config.starting_ang_vel,
-        truth_orientation=config.starting_orientation,
-        belief_pos=config.starting_pos.copy(),
-        belief_vel=config.starting_vel.copy(),
-        belief_ang_vel=config.starting_ang_vel.copy(),
-        belief_orientation=config.starting_orientation,
-        current_mass=config.init_mass,
-        current_fuel_mass=config.init_mass * config.percent_fuel
+        truth_pos=params.starting_pos,
+        truth_vel=params.starting_vel,
+        truth_ang_vel=params.starting_ang_vel,
+        truth_orientation=params.starting_orientation,
+        belief_pos=params.starting_pos.copy(),
+        belief_vel=params.starting_vel.copy(),
+        belief_ang_vel=params.starting_ang_vel.copy(),
+        belief_orientation=params.starting_orientation,
+        current_mass=params.init_mass,
+        current_fuel_mass=params.init_mass * params.percent_fuel
     ),
     mass_props=MassProperties(
-        config.init_mass,
-        config.percent_fuel,
-        burn_rate = config.burn_rate
+        params.init_mass,
+        params.percent_fuel,
+        burn_rate = params.burn_rate
     ),
     engine=Engine(
         throttle=1         # fully on
@@ -51,27 +58,17 @@ physics = PhysicsEngine(rocket)
 sensors = Sensor(rocket)
 estimator = Basic_Estimator(rocket) 
 
-ts = 0.0   #timestamp
+dt = 0.1
+max_time = 10.0  # seconds
 
-while ts < config.sim_time:
-    if rocket.state.current_fuel_mass < 0:
-        break
+sim = Sim(rocket, physics, env, estimator, logger, sensors, dt, max_time)
 
-    #need to update the world, then make decisions and measurements after
-    physics.step_physics(env, config.dt)
-
-    #for now not caring bout the gps 
-    sensor_data = sensors.read_sensors(ts)
-
-    #will be kalman filter but estimates from the noisy measurement
-    estimator.step(sensor_data, config.dt)
-
-    logger.log(ts)
-    ts += config.dt
+if __name__ == '__main__':
+    run()
 
 pos_difference_vec = logger.truth_positions[-1] - logger.belief_positions[-1]
 error = np.linalg.norm(pos_difference_vec)
 
 print("Final error: ", error, " in meters")
 
-visualizer.plots_window()
+# visualizer.plots_window()

@@ -6,7 +6,7 @@ from mass_properties import MassProperties
 
 @dataclass
 class Rocket:
-    name: str = "GenericVehicle"
+    name: str = "JEREMYS AWESOME FREAKING ROCKET"
     state: State = field(default_factory=State)
     mass_props: MassProperties = field(default_factory=MassProperties)
     engine: Engine = field(default_factory=Engine)

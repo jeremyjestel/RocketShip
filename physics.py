@@ -1,7 +1,7 @@
 from environment import Environment
 import numpy as np
 from scipy.spatial.transform import Rotation as R
-import config
+import params
 
 
 class PhysicsEngine:
@@ -24,7 +24,7 @@ class PhysicsEngine:
         if v == 0:
             F_air_resist = np.array([0,0,0])
         else:
-            drag_mag = .5 * env.air_density * v ** 2 * config.drag_coefficient * config.A
+            drag_mag = .5 * env.air_density * v ** 2 * params.drag_coefficient * params.A
             F_air_resist = -drag_mag * (vel_wind_rel / v)
 
         F_total = F_thrust + F_grav + F_air_resist
