@@ -29,7 +29,7 @@ def init_vis(init_pos):
         x = np.array([0, grid_size])
         z = np.zeros(2)
 
-        line = Line(pos=np.column_stack([x, [y, y], z]), color='green', width=1)
+        line = Line(pos=np.column_stack([x, [y, y], z]), color='blue', width=1)
         view.add(line)
 
     for i in range(num_lines):
@@ -38,7 +38,7 @@ def init_vis(init_pos):
         y = np.array([0, grid_size])
         z = np.zeros(2)
 
-        line = Line(pos=np.column_stack([[x, x], y, z]), color='green', width=1)
+        line = Line(pos=np.column_stack([[x, x], y, z]), color='red', width=1)
         view.add(line)
 
     # -----------------------
@@ -53,7 +53,7 @@ def init_vis(init_pos):
 
         x = np.zeros(2)
 
-        line = Line(pos=np.column_stack([x, y, [z, z]]), color='red', width=1)
+        line = Line(pos=np.column_stack([x, y, [z, z]]), color='green', width=1)
         view.add(line)
 
     for i in range(num_lines):
@@ -62,7 +62,7 @@ def init_vis(init_pos):
         z = np.array([0, grid_size])
         x = np.zeros(2)
 
-        line = Line(pos=np.column_stack([x, [y, y], z]), color='red', width=1)
+        line = Line(pos=np.column_stack([x, [y, y], z]), color='blue', width=1)
         view.add(line)
 
     # -----------------------
@@ -76,7 +76,7 @@ def init_vis(init_pos):
         x = np.array([0, grid_size])
         y = np.zeros(2)
 
-        line = Line(pos=np.column_stack([x, y, [z, z]]), color='blue', width=1)
+        line = Line(pos=np.column_stack([x, y, [z, z]]), color='green', width=1)
         view.add(line)
 
     for i in range(num_lines):
@@ -85,7 +85,7 @@ def init_vis(init_pos):
         z = np.array([0, grid_size])
         y = np.zeros(2)
 
-        line = Line(pos=np.column_stack([[x, x], y, z]), color='blue', width=1)
+        line = Line(pos=np.column_stack([[x, x], y, z]), color='red', width=1)
         view.add(line)
 
     # Create a MeshData arrow
@@ -114,11 +114,11 @@ def init_vis(init_pos):
     
     x_label.parent = canvas.scene
 
-    y_label = Text('Y: 0.0', color='green', font_size=10)
+    y_label = Text('Y: 0.0', color='blue', font_size=10)
     y_label.pos = set_normalized_position(0.07, 0.1)
     y_label.parent = canvas.scene
 
-    z_label = Text('Z: 0.0', color='blue', font_size=10)
+    z_label = Text('Z: 0.0', color='green', font_size=10)
     z_label.pos = set_normalized_position(0.07, 0.15)
     z_label.parent = canvas.scene
 
