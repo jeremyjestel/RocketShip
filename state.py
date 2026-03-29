@@ -35,7 +35,7 @@ class State:
         
         # update orientation
         delta_orientation = R.from_rotvec(self.truth_ang_vel * dt)
-        self.truth_orientation = delta_orientation * self.truth_orientation
+        self.truth_orientation = self.truth_orientation * delta_orientation 
 
         self.current_mass -= burn_rate * dt
         self.current_fuel_mass -= burn_rate * dt

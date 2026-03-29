@@ -17,7 +17,6 @@ import params
 from vispy import scene
 from vispy.app import Timer, run
 from vispy.scene.visuals import Line
-from update import update_sim
 from step import step_sim
 from init_vis import init_vis
 from sim import Sim
