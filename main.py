@@ -57,9 +57,7 @@ physics = PhysicsEngine(rocket)
 sensors = Sensor(rocket)
 estimator = Basic_Estimator(rocket) 
 
-dt = 0.1
-
-sim = Sim(rocket, physics, env, estimator, logger, sensors, dt, params.max_time)
+sim = Sim(rocket, physics, env, estimator, logger, sensors, params.dt, params.max_time)
 
 if __name__ == '__main__':
     run()

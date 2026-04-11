@@ -4,6 +4,7 @@ import numpy as np
 from vispy.app import Timer
 from vispy.visuals.transforms import MatrixTransform
 from vispy.scene.visuals import Line
+from scipy.spatial.transform import Rotation as R
 
 class Sim:
     def __init__(self, rocket, physics, env, estimator, logger, sensors, dt, max_time):
@@ -20,7 +21,6 @@ class Sim:
         self.canvas, self.view, self.vis_rocket, self.labels = init_vis(rocket.state.truth_pos)
         self.timer = Timer(self.dt, connect=self.update, start=True)
         self.axis_len = 0.3
-
         vispy_pos = np.array([
             self.rocket.state.truth_pos[0], 
             self.rocket.state.truth_pos[1], 
@@ -33,9 +33,9 @@ class Sim:
         self.pitch_axis      = R @ np.array([0, self.axis_len, 0])
         self.forward_axis = R @ np.array([0, 0, self.axis_len])
 
-        self.line_x = Line(pos=np.array([vispy_pos - self.roll_axis, vispy_pos + self.roll_axis]), color='blue')
-        self.line_y = Line(pos=np.array([vispy_pos - self.pitch_axis, vispy_pos + self.pitch_axis]), color='green')
-        self.line_z = Line(pos=np.array([vispy_pos - self.forward_axis, vispy_pos + self.forward_axis]), color='red')
+        self.line_x = Line(pos=np.array([vispy_pos - self.roll_axis, vispy_pos + self.roll_axis]), color='red')
+        self.line_y = Line(pos=np.array([vispy_pos - self.pitch_axis, vispy_pos + self.pitch_axis]), color='blue')
+        self.line_z = Line(pos=np.array([vispy_pos - self.forward_axis, vispy_pos + self.forward_axis]), color='green')
 
 
     def update(self, event):
@@ -43,11 +43,12 @@ class Sim:
         self.sim_time += self.dt
         if self.sim_time >= self.max_time:
             self.timer.stop()
-        
+            return
         if self.rocket.state.current_fuel_mass <= 0:
             self.rocket.engine.thrust_vec = np.array([0,0,0]) 
 
-        if self.rocket.state.truth_pos[2] <= 0 and self.sim_time >= 1:
+        if self.rocket.state.truth_pos[2] <= -.001:
+            print(self.rocket.state.truth_pos[2])
             self.timer.stop()
 
         self.ts = step_sim(
@@ -71,18 +72,19 @@ class Sim:
         euler_angles = self.rocket.state.truth_orientation.as_euler('xyz', degrees=True)
         pitch, yaw, roll = euler_angles  # in degrees
         self.labels[3].text = f"Pitch: {pitch:.1f}°\n Yaw: {yaw:.1f}°\n Roll: {roll:.1f}°"
+        self.labels[4].text = f'Time: {self.sim_time:.2f}'
 
 
 
         #follow the rocket with camera
         self.view.camera.center = vispy_pos
 
+        #vis_rocket is the visual of the arrow
         #remove prior transforms
         self.vis_rocket.transform.reset()  # VERY IMPORTANT
 
-        # Get 3x3 rotation matrix from scipy Rotation
-        # Apply rotation
-        self.vis_rocket.transform.matrix[:3, :3] = self.rocket.state.truth_orientation.as_matrix()
+        # truth_orientation maps body -> world, so the mesh should use it directly.
+        self.vis_rocket.transform.matrix[:3, :3] = self.rocket.state.truth_orientation.inv().as_matrix()
 
         #move the rocket to the truth position
         self.vis_rocket.transform.translate(vispy_pos)
