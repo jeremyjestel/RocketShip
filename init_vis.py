@@ -34,12 +34,7 @@ def init_vis(init_pos):
             x = np.array([0, grid_size])
         z = np.zeros(2)
 
-        if abs(y) < 1e-6:
-            color = 'blue'   # Y = 0 → X-axis line
-            width = 3
-        else:
-            color = 'white'
-            width = 1
+
 
         line = Line(pos=np.column_stack([x, [y, y], z]), color='white', width=1)
         view.add(line)
@@ -52,12 +47,6 @@ def init_vis(init_pos):
             y = np.array([0, grid_size])
         z = np.zeros(2)
 
-        if abs(x) < 1e-6:
-            color = 'red'   # Y = 0 → X-axis line
-            width = 3
-        else:
-            color = 'white'
-            width = 1
 
         line = Line(pos=np.column_stack([[x, x], y, z]), color='white', width=1)
         view.add(line)
@@ -74,12 +63,6 @@ def init_vis(init_pos):
         else:
             y = np.array([0, grid_size])
 
-        if abs(z) < 1e-6:
-            color = 'green'   # Y = 0 → X-axis line
-            width = 3
-        else:
-            color = 'white'
-            width = 1
 
         x = np.zeros(2)
 
@@ -93,13 +76,6 @@ def init_vis(init_pos):
         else:
             z = np.array([0, grid_size])
         x = np.zeros(2)
-
-        if abs(y) < 1e-6:
-            color = 'blue'   # Y = 0 → X-axis line
-            width = 3
-        else:
-            color = 'white'
-            width = 1
 
         line = Line(pos=np.column_stack([x, [y, y], z]), color='white', width=1)
         view.add(line)
@@ -117,14 +93,6 @@ def init_vis(init_pos):
             x = np.array([0, grid_size])
         y = np.zeros(2)
 
-        if abs(z) < 1e-6:
-            color = 'green'   # Y = 0 → X-axis line
-            width = 3
-        else:
-            color = 'white'
-            width = 1
-
-
         line = Line(pos=np.column_stack([x, y, [z, z]]), color='white', width=1)
         view.add(line)
 
@@ -135,13 +103,6 @@ def init_vis(init_pos):
         else:
             z = np.array([0, grid_size])
         y = np.zeros(2)
-
-        if abs(x) < 1e-6:
-            color = 'red'   # Y = 0 → X-axis line
-            width = 3
-        else:
-            color = 'white'
-            width = 1
 
         line = Line(pos=np.column_stack([[x, x], y, z]), color='white', width=1)
         view.add(line)
@@ -198,29 +159,29 @@ def init_vis(init_pos):
     rocket_mesh.transform = MatrixTransform()
 
 
-    def set_normalized_position(x_frac, y_frac):
-        w, h = canvas.size
-        return [x_frac * w, y_frac * h]
+    # def set_normalized_position(x_frac, y_frac):
+    #     w, h = canvas.size
+    #     return [x_frac * w, y_frac * h]
 
-    x_label = Text('X: 0.0', color='red', font_size=10)
-    x_label.pos = set_normalized_position(0.07, 0.05)  # pixels from bottom-left
+    # x_label = Text('X: 0.0', color='red', font_size=10)
+    # x_label.pos = set_normalized_position(0.07, 0.05)  # pixels from bottom-left
     
-    x_label.parent = canvas.scene
+    # x_label.parent = canvas.scene
 
-    y_label = Text('Y: 0.0', color='blue', font_size=10)
-    y_label.pos = set_normalized_position(0.07, 0.1)
-    y_label.parent = canvas.scene
+    # y_label = Text('Y: 0.0', color='blue', font_size=10)
+    # y_label.pos = set_normalized_position(0.07, 0.1)
+    # y_label.parent = canvas.scene
 
-    z_label = Text('Z: 0.0', color='green', font_size=10)
-    z_label.pos = set_normalized_position(0.07, 0.15)
-    z_label.parent = canvas.scene
+    # z_label = Text('Z: 0.0', color='green', font_size=10)
+    # z_label.pos = set_normalized_position(0.07, 0.15)
+    # z_label.parent = canvas.scene
 
-    angles_label= Text('Angles: 0.0', color='yellow', font_size=10)
-    angles_label.pos = set_normalized_position(0.1, 0.25)
-    angles_label.parent = canvas.scene
+    # angles_label= Text('Angles: 0.0', color='yellow', font_size=10)
+    # angles_label.pos = set_normalized_position(0.1, 0.25)
+    # angles_label.parent = canvas.scene
 
-    time_label= Text('Time: 0.0', color='white', font_size=10)
-    time_label.pos = set_normalized_position(0.1, 0.4)
-    time_label.parent = canvas.scene
+    # time_label= Text('Time: 0.0', color='white', font_size=10)
+    # time_label.pos = set_normalized_position(0.1, 0.4)
+    # time_label.parent = canvas.scene
 
-    return canvas, view, rocket_mesh, [x_label, y_label, z_label, angles_label, time_label]
+    return canvas, view, rocket_mesh#, [x_label, y_label, z_label, angles_label, time_label]

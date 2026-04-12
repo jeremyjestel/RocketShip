@@ -15,8 +15,8 @@ from rocket import Rocket
 from estimator import Basic_Estimator
 import params
 from vispy import scene
-from vispy.app import Timer, run
 from vispy.scene.visuals import Line
+from PyQt6.QtWidgets import QApplication
 from step import step_sim
 from init_vis import init_vis
 from sim import Sim
@@ -31,7 +31,7 @@ rocket = Rocket(
     state = State(
         truth_pos=params.starting_pos,
         truth_vel=params.starting_vel,
-        truth_ang_vel=params.starting_ang_vel,
+        truth_ang_vel=params.starting_ang_vel, 
         truth_orientation=params.starting_orientation,
         belief_pos=params.starting_pos.copy(),
         belief_vel=params.starting_vel.copy(),
@@ -46,7 +46,7 @@ rocket = Rocket(
         burn_rate = params.burn_rate
     ),
     engine=Engine(
-        throttle=1         # fully on
+        throttle=params.throttle          # fully on
     )
 )
 
@@ -57,10 +57,11 @@ physics = PhysicsEngine(rocket)
 sensors = Sensor(rocket)
 estimator = Basic_Estimator(rocket) 
 
+app = QApplication([])
 sim = Sim(rocket, physics, env, estimator, logger, sensors, params.dt, params.max_time)
 
 if __name__ == '__main__':
-    run()
+    app.exec()
 
 pos_difference_vec = logger.truth_positions[-1] - logger.belief_positions[-1]
 error = np.linalg.norm(pos_difference_vec)

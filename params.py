@@ -22,12 +22,17 @@ else:
     starting_orientation = alignment_result[0]
 
 burn_rate = 40000
-max_thrust = 7600000
-dt = .01       # timestep because sim is 100 hz
+max_thrust = 76000000
+dt = 1       # timestep because sim is 100 hz
 max_time = 100   # total simulation time in seconds
 drag_coefficient = .4 #ai suggested .3-.5 for rocke
 A = 10  #this equation is A = pi * r ^ 2, is m ^ 2
 accelerometer_std = .02
 gyro_noise_std = .001 #rad/s
 quadrants = 90
+throttle = .1
+
+# Control sensitivity parameter
+control_sensitivity = 1  # radians per second for attitude control
+throttle_sensitivity = 0.01  # throttle change per timestep for arrow keys
 
