@@ -1,15 +1,16 @@
-from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGroupBox, QPushButton
+from PyQt6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QLabel, QGroupBox, QPushButton, QSizePolicy
 from PyQt6.QtCore import Qt
 import numpy as np
 
 class Panel(QWidget):
-    def __init__(self, rocket, position=(100, 100), pause_callback=None):
+    def __init__(self, rocket, position=(1450, 100), pause_callback=None):
         super().__init__()
 
         self.setWindowTitle('Telemetry')
         self.setWindowFlag(Qt.WindowType.Window, True)
         self.move(*position)
-        self.setFixedWidth(600)
+        self.setMinimumWidth(380)
+        self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Preferred)
 
         self.rocket = rocket
         self.pause_callback = pause_callback
@@ -21,73 +22,91 @@ class Panel(QWidget):
         self.pause_button.clicked.connect(self.on_pause_clicked)
 
         self.pos_label = QLabel()
-        self.alt_label = QLabel()
 
         self.vel_label = QLabel()
-        self.vel_components_label = QLabel()
 
-        self.pitch_label = QLabel()
-        self.roll_label = QLabel()
-        self.yaw_label = QLabel()
+        self.orientation_label = QLabel()
 
-        self.accel_label = QLabel()
-        self.ang_vel_label = QLabel()
+        self.dynamics_label = QLabel()
 
-        self.mass_label = QLabel()
-        self.fuel_label = QLabel()
-        self.fuel_pct_label = QLabel()
-        self.throttle_label = QLabel()
-        self.thrust_label = QLabel()
-        self.time_label = QLabel()
+        self.system_label = QLabel()
+
+        for label in (
+            self.pos_label,
+            self.vel_label,
+            self.orientation_label,
+            self.dynamics_label,
+            self.system_label,
+        ):
+            label.setSizePolicy(QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Fixed)
 
         # -----------------------
         # Layout Sections
         # -----------------------
         main_layout = QVBoxLayout()
+        main_layout.setSpacing(8)
+        main_layout.setContentsMargins(6, 6, 6, 6)
         main_layout.addWidget(self.pause_button)
 
         top_row = QHBoxLayout()
+        top_row.setSpacing(8)
         middle_row = QHBoxLayout()
+        middle_row.setSpacing(8)
         bottom_row = QHBoxLayout()
+        bottom_row.setSpacing(8)
 
         # Position group
         pos_group = QGroupBox("Position")
+        pos_group.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        pos_group.setMinimumWidth(170)
+        pos_group.setMaximumWidth(180)
         pos_layout = QVBoxLayout()
+        pos_layout.setSpacing(2)
+        pos_layout.setContentsMargins(2, 2, 2, 2)
         pos_layout.addWidget(self.pos_label)
-        pos_layout.addWidget(self.alt_label)
         pos_group.setLayout(pos_layout)
 
         # Velocity group
         vel_group = QGroupBox("Velocity")
+        vel_group.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        vel_group.setMinimumWidth(170)
+        vel_group.setMaximumWidth(180)
         vel_layout = QVBoxLayout()
+        vel_layout.setSpacing(2)
+        vel_layout.setContentsMargins(2, 2, 2, 2)
         vel_layout.addWidget(self.vel_label)
-        vel_layout.addWidget(self.vel_components_label)
         vel_group.setLayout(vel_layout)
 
         # Orientation group
         orient_group = QGroupBox("Orientation")
+        orient_group.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        orient_group.setMinimumWidth(170)
+        orient_group.setMaximumWidth(180)
         orient_layout = QVBoxLayout()
-        orient_layout.addWidget(self.pitch_label)
-        orient_layout.addWidget(self.roll_label)
-        orient_layout.addWidget(self.yaw_label)
+        orient_layout.setSpacing(2)
+        orient_layout.setContentsMargins(2, 2, 2, 2)
+        orient_layout.addWidget(self.orientation_label)
         orient_group.setLayout(orient_layout)
 
         # Dynamics group
         dyn_group = QGroupBox("Dynamics")
+        dyn_group.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        dyn_group.setMinimumWidth(170)
+        dyn_group.setMaximumWidth(180)
         dyn_layout = QVBoxLayout()
-        dyn_layout.addWidget(self.accel_label)
-        dyn_layout.addWidget(self.ang_vel_label)
+        dyn_layout.setSpacing(2)
+        dyn_layout.setContentsMargins(2, 2, 2, 2)
+        dyn_layout.addWidget(self.dynamics_label)
         dyn_group.setLayout(dyn_layout)
 
         # System group
         sys_group = QGroupBox("System")
+        sys_group.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Fixed)
+        sys_group.setMinimumWidth(360)
         sys_layout = QVBoxLayout()
-        sys_layout.addWidget(self.time_label)
-        sys_layout.addWidget(self.mass_label)
-        sys_layout.addWidget(self.fuel_label)
-        sys_layout.addWidget(self.fuel_pct_label)
-        sys_layout.addWidget(self.throttle_label)
-        sys_layout.addWidget(self.thrust_label)
+        sys_layout.setSpacing(2)
+        sys_layout.setContentsMargins(2, 2, 2, 2)
+        sys_layout.addWidget(self.system_label)
         sys_group.setLayout(sys_layout)
 
         top_row.addWidget(pos_group)
@@ -135,41 +154,42 @@ class Panel(QWidget):
             f"Y: {pos[1]:.2f} m\n"
             f"Z: {pos[2]:.2f} m"
         )
-        self.alt_label.setText(f"Altitude: {pos[2]:.2f} m")
 
         # Velocity
-        self.vel_label.setText(f"Speed: {speed:.2f} m/s")
-        self.vel_components_label.setText(
+        self.vel_label.setText(
+            f"Speed: {speed:.2f} m/s\n"
             f"Vx: {vel[0]:.2f} m/s\n"
             f"Vy: {vel[1]:.2f} m/s\n"
             f"Vz: {vel[2]:.2f} m/s"
         )
 
         # Orientation
-        self.pitch_label.setText(f"Pitch: {euler[0]:.1f}°")
-        self.roll_label.setText(f"Roll:  {euler[1]:.1f}°")
-        self.yaw_label.setText(f"Yaw:   {euler[2]:.1f}°")
+        self.orientation_label.setText(
+            f"Pitch: {euler[0]:.1f}°\n"
+            f"Roll: {euler[1]:.1f}°\n"
+            f"Yaw: {euler[2]:.1f}°"
+        )
 
         # Dynamics
-        self.accel_label.setText(
+        self.dynamics_label.setText(
             f"Accel: {accel_norm:.2f} m/s²\n"
-            f"ax: {accel[0]:.2f}, ay: {accel[1]:.2f}, az: {accel[2]:.2f}"
-        )
-        self.ang_vel_label.setText(
+            f"ax: {accel[0]:.2f}, ay: {accel[1]:.2f}, az: {accel[2]:.2f}\n"
             f"Ang Vel: {np.linalg.norm(ang_vel):.2f} rad/s\n"
             f"wx: {ang_vel[0]:.2f}, wy: {ang_vel[1]:.2f}, wz: {ang_vel[2]:.2f}"
         )
 
         # System
-        self.mass_label.setText(f"Mass: {state.current_mass:.2f} kg")
-        self.fuel_label.setText(f"Fuel: {state.current_fuel_mass:.2f} kg")
-        self.time_label.setText(f"Time: {sim_time:.2f} s")
         if self.rocket.mass_props.initial_mass > 0:
             fuel_pct = 100.0 * state.current_fuel_mass / (self.rocket.mass_props.initial_mass * self.rocket.mass_props.percent_fuel)
         else:
             fuel_pct = 0.0
-        self.fuel_pct_label.setText(f"Fuel %: {fuel_pct:.1f}%")
-        self.throttle_label.setText(f"Throttle: {self.rocket.engine.throttle:.2f}")
 
         thrust_mag = np.linalg.norm(self.rocket.engine.thrust_vec * self.rocket.engine.throttle)
-        self.thrust_label.setText(f"Thrust: {thrust_mag:.2f} N")
+        self.system_label.setText(
+            f"Time: {sim_time:.2f} s\n"
+            f"Mass: {state.current_mass:.2f} kg\n"
+            f"Fuel: {state.current_fuel_mass:.2f} kg\n"
+            f"Fuel %: {fuel_pct:.1f}%\n"
+            f"Throttle: {self.rocket.engine.throttle:.2f}\n"
+            f"Thrust: {thrust_mag:.2f} N"
+        )

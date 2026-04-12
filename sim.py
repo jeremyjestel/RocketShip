@@ -61,14 +61,8 @@ class Sim:
 
     def update(self, event):
 
-        self.sim_time += self.dt
-        if self.sim_time >= self.max_time:
-            self.timer.stop()
-            return
         if self.rocket.state.current_fuel_mass <= 0:
             self.rocket.engine.thrust_vec = np.array([0,0,0]) 
-
-
 
         # Apply keyboard controls
         self.input_handler.apply_controls()
@@ -82,6 +76,12 @@ class Sim:
                 self.sensors,
                 self.ts
             )
+            self.sim_time += self.dt
+
+        if self.sim_time >= self.max_time:
+            self.timer.stop()
+            return
+
         self.telemetry.update_display(self.sim_time)
 
         vispy_pos = np.array([

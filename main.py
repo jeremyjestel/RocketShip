@@ -14,58 +14,66 @@ from sense import Sensor
 from rocket import Rocket
 from estimator import Basic_Estimator
 import params
-from vispy import scene
-from vispy.scene.visuals import Line
 from PyQt6.QtWidgets import QApplication
-from step import step_sim
-from init_vis import init_vis
 from sim import Sim
-#user adjusted params
+from input_panel import InputPanel
 
-env = Environment(
-    wind=params.wind        # m/s, affects air resistance drag
-)
+sim = None
 
-rocket = Rocket(
-    name="TestRocket",
-    state = State(
-        truth_pos=params.starting_pos,
-        truth_vel=params.starting_vel,
-        truth_ang_vel=params.starting_ang_vel, 
-        truth_orientation=params.starting_orientation,
-        belief_pos=params.starting_pos.copy(),
-        belief_vel=params.starting_vel.copy(),
-        belief_ang_vel=params.starting_ang_vel.copy(),
-        belief_orientation=params.starting_orientation,
-        current_mass=params.init_mass,
-        current_fuel_mass=params.init_mass * params.percent_fuel
-    ),
-    mass_props=MassProperties(
-        params.init_mass,
-        params.percent_fuel,
-        burn_rate = params.burn_rate
-    ),
-    engine=Engine(
-        throttle=params.throttle          # fully on
+
+def create_sim():
+    env = Environment(
+        wind=params.wind        # m/s, affects air resistance drag
     )
-)
 
-controller = Controller(rocket)
-logger = Logger(rocket)
-visualizer = Visualizer(logger)
-physics = PhysicsEngine(rocket)
-sensors = Sensor(rocket)
-estimator = Basic_Estimator(rocket) 
+    rocket = Rocket(
+        name="TestRocket",
+        state=State(
+            truth_pos=params.starting_pos,
+            truth_vel=params.starting_vel,
+            truth_ang_vel=params.starting_ang_vel,
+            truth_orientation=params.starting_orientation,
+            belief_pos=params.starting_pos.copy(),
+            belief_vel=params.starting_vel.copy(),
+            belief_ang_vel=params.starting_ang_vel.copy(),
+            belief_orientation=params.starting_orientation,
+            current_mass=params.init_mass,
+            current_fuel_mass=params.init_mass * params.percent_fuel,
+        ),
+        mass_props=MassProperties(
+            params.init_mass,
+            params.percent_fuel,
+            burn_rate=params.burn_rate,
+        ),
+        engine=Engine(
+            throttle=params.throttle,
+        ),
+    )
 
-app = QApplication([])
-sim = Sim(rocket, physics, env, estimator, logger, sensors, params.dt, params.max_time)
+    Controller(rocket)
+    logger = Logger(rocket)
+    Visualizer(logger)
+    physics = PhysicsEngine(rocket)
+    sensors = Sensor(rocket)
+    estimator = Basic_Estimator(rocket)
+
+    return Sim(rocket, physics, env, estimator, logger, sensors, params.dt, params.max_time)
+
+
+def run_simulation():
+    global sim
+    sim = create_sim()
+
 
 if __name__ == '__main__':
+    app = QApplication([])
+    panel = InputPanel(run_callback=run_simulation)
+    panel.show()
     app.exec()
 
-pos_difference_vec = logger.truth_positions[-1] - logger.belief_positions[-1]
-error = np.linalg.norm(pos_difference_vec)
-
-print("Final error: ", error, " in meters")
-
-# visualizer.plots_window()
+    if sim is not None:
+        pos_difference_vec = sim.logger.truth_positions[-1] - sim.logger.belief_positions[-1]
+        error = np.linalg.norm(pos_difference_vec)
+        print("Final error: ", error, " in meters")
+    else:
+        print("Simulation was not started.")

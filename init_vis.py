@@ -10,9 +10,10 @@ from vispy.scene import Text
 from params import quadrants
 
 def init_vis(init_pos):
-    canvas = scene.SceneCanvas(keys='interactive', size=(800, 600), show=True)
+    canvas = scene.SceneCanvas(keys='interactive', size=(1400, 900), show=True)
+    canvas.bgcolor = '#181818'
     view = canvas.central_widget.add_view()
-    view.camera = scene.cameras.TurntableCamera(up='z', fov=60)
+    view.camera = scene.cameras.TurntableCamera(up='z', fov=60, center=init_pos, distance=80)
 
     #lines gonna be on scale of 1 km
     grid_size = 100 # this is noth sides so across whole plain -50 ro 50
