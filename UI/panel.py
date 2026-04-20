@@ -178,18 +178,12 @@ class Panel(QWidget):
             f"wx: {ang_vel[0]:.2f}, wy: {ang_vel[1]:.2f}, wz: {ang_vel[2]:.2f}"
         )
 
-        # System
-        if self.rocket.mass_props.initial_mass > 0:
-            fuel_pct = 100.0 * state.current_fuel_mass / (self.rocket.mass_props.initial_mass * self.rocket.mass_props.percent_fuel)
-        else:
-            fuel_pct = 0.0
 
         thrust_mag = np.linalg.norm(self.rocket.engine.thrust_vec * self.rocket.engine.throttle)
         self.system_label.setText(
             f"Time: {sim_time:.2f} s\n"
             f"Mass: {state.current_mass:.2f} kg\n"
             f"Fuel: {state.current_fuel_mass:.2f} kg\n"
-            f"Fuel %: {fuel_pct:.1f}%\n"
             f"Throttle: {self.rocket.engine.throttle:.2f}\n"
             f"Thrust: {thrust_mag:.2f} N"
         )

@@ -7,7 +7,7 @@ from vispy.color import Color
 import numpy as np
 from vispy.visuals.transforms import MatrixTransform
 from vispy.scene import Text
-from params import quadrants
+from params import quadrants, grid_size, line_spacing
 
 def init_vis(init_pos):
     canvas = scene.SceneCanvas(keys='interactive', size=(800, 600), show=True)
@@ -15,8 +15,7 @@ def init_vis(init_pos):
     view.camera = scene.cameras.TurntableCamera(up='z', fov=60)
 
     #lines gonna be on scale of 1 km
-    grid_size = 100 # this is noth sides so across whole plain -50 ro 50
-    num_lines = grid_size//5
+    num_lines = grid_size//line_spacing
     spacing = grid_size / num_lines
     if quadrants == 360:
         start = -grid_size / 2

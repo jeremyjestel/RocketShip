@@ -1,20 +1,20 @@
-from init_vis import init_vis
-from input_handler import InputHandler
-from step import step_sim
+from UI.init_vis import init_vis
+from UI.input_handler import InputHandler
+from guts.step import step_sim
 import numpy as np
 from typing import Any, cast
 from vispy.app import Timer
 from vispy.visuals.transforms import MatrixTransform
-from vispy.scene.visuals import Line
+from vispy.scene.visuals import Line, Markers
 from scipy.spatial.transform import Rotation as R
 import params
 from vispy.scene import Text
-from panel import Panel
+from UI.panel import Panel
 
 
 
 class Sim:
-    def __init__(self, rocket, physics, env, estimator, logger, sensors, dt, max_time):
+    def __init__(self, rocket, physics, env, estimator, logger, sensors, dt, max_time, on_close_callback=None):
         self.rocket = rocket
         self.physics = physics
         self.env = env
@@ -25,6 +25,7 @@ class Sim:
         self.sim_time = 0.0
         self.dt = dt
         self.max_time = max_time
+        self.on_close_callback = on_close_callback
         self.canvas, self.view, self.vis_rocket = init_vis(rocket.state.truth_pos)
         self.canvas = cast(Any, self.canvas)
         self.input_handler = InputHandler(self.rocket)
@@ -33,6 +34,9 @@ class Sim:
         # Connect keyboard events
         self.canvas.events.key_press.connect(self.input_handler.on_key_press)
         self.canvas.events.key_release.connect(self.input_handler.on_key_release)
+        
+        # Connect canvas close event
+        self.canvas.events.close.connect(self.on_canvas_close)
         
         self.timer = Timer(self.dt, connect=self.update, start=True)
         self.axis_len = 0.3
@@ -51,6 +55,10 @@ class Sim:
         self.line_x = Line(pos=np.array([vispy_pos - self.roll_axis, vispy_pos + self.roll_axis]), color='red')
         self.line_y = Line(pos=np.array([vispy_pos - self.pitch_axis, vispy_pos + self.pitch_axis]), color='blue')
         self.line_z = Line(pos=np.array([vispy_pos - self.forward_axis, vispy_pos + self.forward_axis]), color='green')
+
+        self.trail_positions = [vispy_pos.copy()]
+        self.trail = Markers(parent=self.view.scene)
+        self.trail.set_data(np.array(self.trail_positions), face_color='yellow', size=5)
 
         self.telemetry = Panel(rocket, pause_callback=self.toggle_pause)
         self.telemetry.show()
@@ -80,6 +88,8 @@ class Sim:
 
         if self.sim_time >= self.max_time:
             self.timer.stop()
+            if self.on_close_callback is not None:
+                self.on_close_callback()
             return
 
         self.telemetry.update_display(self.sim_time)
@@ -89,6 +99,10 @@ class Sim:
             self.rocket.state.truth_pos[1], 
             self.rocket.state.truth_pos[2]
         ])
+        if not self.paused:
+            self.trail_positions.append(vispy_pos.copy())
+            self.trail.set_data(np.array(self.trail_positions), face_color='yellow', size=4)
+
         # self.labels[0].text = f'X: {vispy_pos[0]:.2f}'
         # self.labels[1].text = f'Y: {vispy_pos[1]:.2f}'
         # self.labels[2].text = f'Z: {vispy_pos[2]:.2f}'
@@ -136,6 +150,13 @@ class Sim:
 
         if self.rocket.state.truth_pos[2] <= -.001:            
             self.timer.stop()
+            if self.on_close_callback is not None:
+                self.on_close_callback()
             return
-    
+
+    def on_canvas_close(self, event):
+        """Called when the VisPy canvas is closed"""
+        if self.on_close_callback is not None:
+            self.on_close_callback()
+
 

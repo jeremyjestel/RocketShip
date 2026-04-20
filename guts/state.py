@@ -38,7 +38,9 @@ class State:
         self.truth_orientation = self.truth_orientation * delta_orientation
 
         self.current_mass -= burn_rate * dt
+        self.current_mass = max(self.current_mass, 0)
         self.current_fuel_mass -= burn_rate * dt
+        self.current_fuel_mass = max(self.current_fuel_mass, 0)
 
     def update_belief_state(self, dt):
         self.belief_vel += self.belief_accel * dt

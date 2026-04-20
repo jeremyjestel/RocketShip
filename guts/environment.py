@@ -7,6 +7,6 @@ class Environment:
     air_density: float = 1.225  # kg/m^3 at sea level
     wind: np.ndarray = field(default_factory=lambda: np.zeros(3))
 
-    def get_gravity(self, position=None):
+    def get_gravity(self, altitude=None):
         # could vary with altitude later
         return self.gravity

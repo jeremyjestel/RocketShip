@@ -1,30 +1,28 @@
 # main.py
 
 import numpy as np
-from state import State
-from mass_properties import MassProperties
-from engine import Engine
-from environment import Environment
-from physics import PhysicsEngine
-from controller import Controller
-from logger import Logger
-from visualizer import Visualizer
+from guts.state import State
+from guts.engine import Engine
+from guts.environment import Environment
+from guts.physics import PhysicsEngine
+from guts.controller import Controller
+from UI.logger import Logger
+from UI.visualizer import Visualizer
 from scipy.spatial.transform import Rotation as R
-from sense import Sensor
-from rocket import Rocket
-from estimator import Basic_Estimator
+from sensors.sense import Sensor
+from guts.rocket import Rocket
+from sensors.estimator import Basic_Estimator
 import params
 from PyQt6.QtWidgets import QApplication
-from sim import Sim
-from input_panel import InputPanel
+from guts.sim import Sim
+from UI.input_panel import InputPanel
 
-sim = None
+simulation = None
+input_panel = None
 
 
 def create_sim():
-    env = Environment(
-        wind=params.wind        # m/s, affects air resistance drag
-    )
+    env = Environment(wind=params.wind)
 
     rocket = Rocket(
         name="TestRocket",
@@ -40,14 +38,7 @@ def create_sim():
             current_mass=params.init_mass,
             current_fuel_mass=params.init_mass * params.percent_fuel,
         ),
-        mass_props=MassProperties(
-            params.init_mass,
-            params.percent_fuel,
-            burn_rate=params.burn_rate,
-        ),
-        engine=Engine(
-            throttle=params.throttle,
-        ),
+        engine=Engine(throttle=params.throttle, burn_rate=params.burn_rate),
     )
 
     Controller(rocket)
@@ -57,23 +48,41 @@ def create_sim():
     sensors = Sensor(rocket)
     estimator = Basic_Estimator(rocket)
 
-    return Sim(rocket, physics, env, estimator, logger, sensors, params.dt, params.max_time)
+    return Sim(
+        rocket,
+        physics,
+        env,
+        estimator,
+        logger,
+        sensors,
+        params.dt,
+        params.max_time,
+        on_close_callback=show_input_panel,
+    )
 
 
 def run_simulation():
-    global sim
-    sim = create_sim()
+    global simulation
+    if input_panel is not None and input_panel.isVisible():
+        input_panel.hide()
+    simulation = create_sim()
+
+
+def show_input_panel():
+    if input_panel is not None:
+        input_panel.show()
 
 
 if __name__ == '__main__':
     app = QApplication([])
-    panel = InputPanel(run_callback=run_simulation)
-    panel.show()
+    app.setQuitOnLastWindowClosed(True)
+    input_panel = InputPanel(run_callback=run_simulation)
+    input_panel.show()
     app.exec()
 
-    if sim is not None:
-        pos_difference_vec = sim.logger.truth_positions[-1] - sim.logger.belief_positions[-1]
-        error = np.linalg.norm(pos_difference_vec)
-        print("Final error: ", error, " in meters")
-    else:
-        print("Simulation was not started.")
+    # if sim is not None:
+    #     pos_difference_vec = sim.logger.truth_positions[-1] - sim.logger.belief_positions[-1]
+    #     error = np.linalg.norm(pos_difference_vec)
+    #     print("Final error: ", error, " in meters")
+    # else:
+    #     print("Simulation was not started.")

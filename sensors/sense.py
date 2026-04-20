@@ -1,8 +1,8 @@
-from rocket import Rocket
+from guts.rocket import Rocket
 import numpy as np
-from GPS import GPS
-from gyroscope import Gyroscope
-from accelerometer import Accelerometer
+from sensors.GPS import GPS
+from sensors.gyroscope import Gyroscope
+from sensors.accelerometer import Accelerometer
 
 class Sensor:
     def __init__(self, rocket: Rocket):

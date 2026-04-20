@@ -7,8 +7,8 @@ percent_fuel = .33
 #thjese have to be floats
 wind=np.array([0., 0., 0.])
 starting_pos = np.array([0., 0., 0.])
-starting_vel = np.array([0., 0., 0.])
-starting_ang_vel = np.array([0.5, 0, 0])
+starting_vel = np.array([1., 1., 1.])
+starting_ang_vel = np.array([0, 0, 0])
 
 # normalize (avoid zero division)
 if np.linalg.norm(starting_vel) < 1e-8:
@@ -23,7 +23,7 @@ else:
 
 burn_rate = 40000
 max_thrust = 76000000
-dt = 1       # timestep because sim is 100 hz
+dt = .1       # timestep because sim is 100 hz
 max_time = 100   # total simulation time in seconds
 drag_coefficient = .4 #ai suggested .3-.5 for rocke
 A = 10  #this equation is A = pi * r ^ 2, is m ^ 2
@@ -31,6 +31,8 @@ accelerometer_std = .02
 gyro_noise_std = .001 #rad/s
 quadrants = 90
 throttle = .1
+grid_size = 1000  # size of the visualization grid in meters
+line_spacing = 100
 
 # Control sensitivity parameter
 control_sensitivity = 1  # radians per second for attitude control

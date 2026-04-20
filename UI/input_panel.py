@@ -31,8 +31,8 @@ class InputPanel(QWidget):
 
     def _build_ui(self):
         layout = QVBoxLayout()
-        self.scroll = QScrollArea()
-        self.scroll.setWidgetResizable(True)
+        self.scroll = QScrollArea() # type: ignore
+        self.scroll.setWidgetResizable(True) # type: ignore
 
         content = QWidget()
         form_layout = QFormLayout(content)
@@ -55,9 +55,11 @@ class InputPanel(QWidget):
         self._add_scalar_field(form_layout, 'throttle', params.throttle, unit='unitless')
         self._add_scalar_field(form_layout, 'control_sensitivity', params.control_sensitivity, unit='rad/s')
         self._add_scalar_field(form_layout, 'throttle_sensitivity', params.throttle_sensitivity, unit='unitless')
+        self._add_scalar_field(form_layout, 'grid_size', params.grid_size, unit='unitless')
+        self._add_scalar_field(form_layout, 'line_spacing', params.line_spacing, unit='unitless')
 
-        self.scroll.setWidget(content)
-        layout.addWidget(self.scroll)
+        self.scroll.setWidget(content)# type: ignore
+        layout.addWidget(self.scroll)# type: ignore
 
         controls = QHBoxLayout()
         self.run_button = QPushButton('Run Simulation')
@@ -101,7 +103,7 @@ class InputPanel(QWidget):
 
         if self.run_callback is not None:
             self.run_callback()
-        self.close()
+        self.hide()
 
     def apply_fields(self):
         for name, (field_type, field) in self.fields.items():
