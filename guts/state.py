@@ -26,10 +26,17 @@ class State:
 
     current_mass: float = 1000
     current_fuel_mass: float = 1000
+    in_flight: bool = False
 
     def update_truth_state(self, dt, burn_rate):
         self.truth_vel += self.truth_accel * dt
         self.truth_pos += self.truth_vel * dt
+        self.truth_pos[2] = max(0, self.truth_pos[2])
+        if self.truth_pos[2] == 0 and self.truth_vel[2] < 0:
+            self.truth_vel[2] = 0
+
+        if self.truth_pos[2] > 0:
+            self.in_flight = True
 
         self.truth_ang_vel += self.truth_ang_accel * dt  # rad/s
         

@@ -44,18 +44,18 @@ class InputHandler:
             roll_rate -= params.control_sensitivity
         if self.key_state['e']:
             roll_rate += params.control_sensitivity
-        if self.key_state['w']:
-            pitch_rate -= params.control_sensitivity
         if self.key_state['s']:
+            pitch_rate -= params.control_sensitivity
+        if self.key_state['w']:
             pitch_rate += params.control_sensitivity
         if self.key_state['a']:
             yaw_rate -= params.control_sensitivity
         if self.key_state['d']:
             yaw_rate += params.control_sensitivity
 
-        self.rocket.state.truth_ang_vel[0] = roll_rate
-        self.rocket.state.truth_ang_vel[1] = pitch_rate
-        self.rocket.state.truth_ang_vel[2] = yaw_rate
+        self.rocket.state.truth_ang_vel[0] = pitch_rate
+        self.rocket.state.truth_ang_vel[1] = yaw_rate
+        self.rocket.state.truth_ang_vel[2] = roll_rate
 
         if self.key_state['up']:
             self.rocket.engine.throttle = min(1.0, self.rocket.engine.throttle + params.throttle_sensitivity)

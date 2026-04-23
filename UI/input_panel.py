@@ -10,6 +10,7 @@ from PyQt6.QtWidgets import (
     QScrollArea,
 )
 from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QApplication
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 import params
@@ -104,6 +105,12 @@ class InputPanel(QWidget):
         if self.run_callback is not None:
             self.run_callback()
         self.hide()
+
+    def closeEvent(self, event):
+        app = QApplication.instance()
+        if app is not None:
+            app.quit()
+        super().closeEvent(event)
 
     def apply_fields(self):
         for name, (field_type, field) in self.fields.items():

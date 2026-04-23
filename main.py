@@ -48,34 +48,37 @@ def create_sim():
     sensors = Sensor(rocket)
     estimator = Basic_Estimator(rocket)
 
-    return Sim(
-        rocket,
-        physics,
-        env,
-        estimator,
-        logger,
-        sensors,
-        params.dt,
-        params.max_time,
-        on_close_callback=show_input_panel,
-    )
+    return {
+        "rocket": rocket,
+        "physics": physics,
+        "env": env,
+        "estimator": estimator,
+        "logger": logger,
+        "sensors": sensors,
+        "dt": params.dt,
+        "max_time": params.max_time,
+    }
 
 
 def run_simulation():
     global simulation
-    if input_panel is not None and input_panel.isVisible():
-        input_panel.hide()
-    simulation = create_sim()
+    sim_args = create_sim()
+    if simulation is None:
+        simulation = Sim(**sim_args, session_end_callback=show_input_panel)
+        return
+    simulation.reset_session(**sim_args)
 
 
 def show_input_panel():
     if input_panel is not None:
         input_panel.show()
+        input_panel.raise_()
+        input_panel.activateWindow()
 
 
 if __name__ == '__main__':
     app = QApplication([])
-    app.setQuitOnLastWindowClosed(True)
+    app.setQuitOnLastWindowClosed(False)
     input_panel = InputPanel(run_callback=run_simulation)
     input_panel.show()
     app.exec()

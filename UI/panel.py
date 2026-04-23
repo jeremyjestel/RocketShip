@@ -3,7 +3,7 @@ from PyQt6.QtCore import Qt
 import numpy as np
 
 class Panel(QWidget):
-    def __init__(self, rocket, position=(1450, 100), pause_callback=None):
+    def __init__(self, rocket, position=(1450, 100), pause_callback=None, close_callback=None):
         super().__init__()
 
         self.setWindowTitle('Telemetry')
@@ -14,6 +14,7 @@ class Panel(QWidget):
 
         self.rocket = rocket
         self.pause_callback = pause_callback
+        self.close_callback = close_callback
 
         # -----------------------
         # Create Labels
@@ -125,6 +126,19 @@ class Panel(QWidget):
 
         # Initialize display
         self.update_display()
+
+    def set_context(self, rocket, pause_callback=None):
+        self.rocket = rocket
+        self.pause_callback = pause_callback
+        self.pause_button.setText("Pause")
+        self.update_display()
+
+    def closeEvent(self, event):
+        if self.close_callback is not None:
+            self.close_callback()
+            event.ignore()
+            return
+        super().closeEvent(event)
 
     def on_pause_clicked(self):
         if self.pause_callback is None:
