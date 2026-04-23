@@ -45,10 +45,20 @@ class Sim:
         self.line_x = Line(pos=np.array([vispy_pos - self.roll_axis, vispy_pos + self.roll_axis]), color='red')
         self.line_y = Line(pos=np.array([vispy_pos - self.pitch_axis, vispy_pos + self.pitch_axis]), color='blue')
         self.line_z = Line(pos=np.array([vispy_pos - self.forward_axis, vispy_pos + self.forward_axis]), color='green')
+        self.line_x.set_gl_state(depth_test=False)
+        self.line_y.set_gl_state(depth_test=False)
+        self.line_z.set_gl_state(depth_test=False)
 
         self.trail_positions = [vispy_pos.copy()]
         self.trail = Markers(parent=self.view.scene)
-        self.trail.set_data(np.array(self.trail_positions), face_color='yellow', size=5)
+        self.trail.set_gl_state(depth_test=False)
+        self.trail.set_data(
+            np.array(self.trail_positions),
+            face_color='yellow',
+            edge_color='yellow',
+            edge_width=0.0,
+            size=5,
+        )
 
         self.telemetry = Panel(rocket, pause_callback=self.toggle_pause, close_callback=self.end_session)
         canvas_native = getattr(self.canvas, "native", None)
@@ -86,7 +96,13 @@ class Sim:
         ])
 
         self.trail_positions = [vispy_pos.copy()]
-        self.trail.set_data(np.array(self.trail_positions), face_color='yellow', size=5)
+        self.trail.set_data(
+            np.array(self.trail_positions),
+            face_color='yellow',
+            edge_color='yellow',
+            edge_width=0.0,
+            size=5,
+        )
         self.view.camera.center = vispy_pos
         self._update_visuals(vispy_pos)
 
@@ -153,6 +169,8 @@ class Sim:
 
     def update(self, event):
 
+
+
         if self.rocket.state.current_fuel_mass <= 0:
             self.rocket.engine.thrust_vec = np.array([0,0,0]) 
 
@@ -181,9 +199,18 @@ class Sim:
             self.rocket.state.truth_pos[1], 
             self.rocket.state.truth_pos[2]
         ])
+        
+        # Keep following the rocket only while the sim is running.
         if not self.paused:
+            self.view.camera.center = vispy_pos
             self.trail_positions.append(vispy_pos.copy())
-            self.trail.set_data(np.array(self.trail_positions), face_color='yellow', size=4)
+            self.trail.set_data(
+                np.array(self.trail_positions),
+                face_color='yellow',
+                edge_color='yellow',
+                edge_width=0.0,
+                size=5,
+            )
 
         # self.labels[0].text = f'X: {vispy_pos[0]:.2f}'
         # self.labels[1].text = f'Y: {vispy_pos[1]:.2f}'
@@ -196,8 +223,6 @@ class Sim:
 
 
 
-        #follow the rocket with camera
-        self.view.camera.center = vispy_pos
 
         self._update_visuals(vispy_pos)
 
@@ -206,5 +231,3 @@ class Sim:
         if self.rocket.state.truth_pos[2] <= -.001 and self.rocket.state.in_flight == True:            
             self.finish_run()
             return
-
-

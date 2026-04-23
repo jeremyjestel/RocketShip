@@ -36,6 +36,7 @@ def init_vis(init_pos):
 
 
         line = Line(pos=np.column_stack([x, [y, y], z]), color='white', width=1)
+        line.set_gl_state(depth_test=False)
         view.add(line)
 
     for i in range(num_lines):
@@ -48,6 +49,7 @@ def init_vis(init_pos):
 
 
         line = Line(pos=np.column_stack([[x, x], y, z]), color='white', width=1)
+        line.set_gl_state(depth_test=False)
         view.add(line)
 
     # -----------------------
@@ -66,6 +68,7 @@ def init_vis(init_pos):
         x = np.zeros(2)
 
         line = Line(pos=np.column_stack([x, y, [z, z]]), color='white', width=1)
+        line.set_gl_state(depth_test=False)
         view.add(line)
 
     for i in range(num_lines):
@@ -77,6 +80,7 @@ def init_vis(init_pos):
         x = np.zeros(2)
 
         line = Line(pos=np.column_stack([x, [y, y], z]), color='white', width=1)
+        line.set_gl_state(depth_test=False)
         view.add(line)
 
     # -----------------------
@@ -93,6 +97,7 @@ def init_vis(init_pos):
         y = np.zeros(2)
 
         line = Line(pos=np.column_stack([x, y, [z, z]]), color='white', width=1)
+        line.set_gl_state(depth_test=False)
         view.add(line)
 
     for i in range(num_lines):
@@ -104,6 +109,7 @@ def init_vis(init_pos):
         y = np.zeros(2)
 
         line = Line(pos=np.column_stack([[x, x], y, z]), color='white', width=1)
+        line.set_gl_state(depth_test=False)
         view.add(line)
 
     axis_len = grid_size / 2 if quadrants == 360 else grid_size
@@ -119,6 +125,7 @@ def init_vis(init_pos):
         color='red',
         width=4,
     )
+    line.set_gl_state(depth_test=False)
     view.add(line)
 
     if quadrants == 360:
@@ -131,6 +138,7 @@ def init_vis(init_pos):
         color='blue',
         width=4
     )
+    line.set_gl_state(depth_test=False)
     view.add(line)
 
     # Z axis (green)
@@ -139,6 +147,7 @@ def init_vis(init_pos):
         color='green',
         width=4
     )
+    line.set_gl_state(depth_test=False)
     view.add(line)
 
     # Create a MeshData arrow
