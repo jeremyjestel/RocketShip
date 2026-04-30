@@ -38,7 +38,7 @@ def create_sim():
             current_mass=params.init_mass,
             current_fuel_mass=params.init_mass * params.percent_fuel,
         ),
-        engine=Engine(throttle=params.throttle, burn_rate=params.burn_rate),
+        engine=Engine(throttle=params.throttle, burn_rate=params.burn_rate, max_thrust = params.max_thrust),
     )
 
     Controller(rocket)
