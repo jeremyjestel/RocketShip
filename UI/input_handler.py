@@ -15,7 +15,9 @@ class InputHandler:
             'down': False,
         }
 
-    def _normalize_key(self, key_name: str) -> str:
+    def _normalize_key(self, key_name: str | None) -> str | None:
+        if not key_name:
+            return None
         key_name = key_name.lower()
         if key_name.startswith('arrow_'):
             return key_name.split('_', 1)[1]
@@ -23,15 +25,20 @@ class InputHandler:
             return key_name.replace('arrow', '')
         return key_name
 
+    def _event_key(self, event) -> str | None:
+        key = getattr(event, 'key', None)
+        key_name = getattr(key, 'name', None)
+        return self._normalize_key(key_name)
+
     def on_key_press(self, event):
         if getattr(event, 'is_repeat', False):
             return
-        key = self._normalize_key(event.key.name)
+        key = self._event_key(event)
         if key in self.key_state and not self.key_state[key]:
             self.key_state[key] = True
 
     def on_key_release(self, event):
-        key = self._normalize_key(event.key.name)
+        key = self._event_key(event)
         if key in self.key_state and self.key_state[key]:
             self.key_state[key] = False
 
@@ -44,9 +51,9 @@ class InputHandler:
             roll_rate -= params.control_sensitivity
         if self.key_state['e']:
             roll_rate += params.control_sensitivity
-        if self.key_state['s']:
-            pitch_rate -= params.control_sensitivity
         if self.key_state['w']:
+            pitch_rate -= params.control_sensitivity
+        if self.key_state['s']:
             pitch_rate += params.control_sensitivity
         if self.key_state['a']:
             yaw_rate -= params.control_sensitivity

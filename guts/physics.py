@@ -32,6 +32,7 @@ class PhysicsEngine:
 
     def step_physics(self, env: Environment, dt: float):
         F_total = self.compute_forces(env)
+
         self.rocket.state.truth_accel = F_total / self.rocket.state.current_mass
         self.rocket.state.update_truth_state(dt, self.rocket.engine.burn_rate)
 
