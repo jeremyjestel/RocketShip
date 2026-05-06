@@ -14,4 +14,7 @@ class Engine:
         self.max_thrust = max_thrust
 
     def get_thrust(self):
-          return np.array([0, 0, self.max_thrust]) * self.throttle
+          return self.thrust_vec * self.throttle
+    
+    def fuel_empty(self):
+        self.thrust_vec = np.array([0,0,0])

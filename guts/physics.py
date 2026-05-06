@@ -11,28 +11,47 @@ class PhysicsEngine:
     def compute_forces(self, env: Environment):
         #thrust
         thrust_body = self.rocket.engine.get_thrust()
+        r_thrust = params.engine_pos - params.COM
+        tau_thrust_body = np.cross(r_thrust, thrust_body)
+        tau_thrust = self.rocket.state.truth_orientation.apply(tau_thrust_body)
         F_thrust = self.rocket.state.truth_orientation.apply(thrust_body)
-
+    
         
         # force of gravity
         F_grav = env.get_gravity(self.rocket.state.truth_pos) * self.rocket.state.current_mass
+        
+
 
         # force of drag adjusted for wind
         vel_wind_rel = self.rocket.state.truth_vel - env.wind
         v = np.linalg.norm(vel_wind_rel)
 
+
         if v == 0:
-            F_air_resist = np.array([0,0,0])
+            F_drag = np.array([0,0,0])
         else:
             drag_mag = .5 * env.air_density * v ** 2 * params.drag_coefficient * params.A
-            F_air_resist = -drag_mag * (vel_wind_rel / v)
+            F_drag = -drag_mag * (vel_wind_rel / v)
 
-        F_total = F_thrust + F_grav + F_air_resist
-        return F_total
+        F_drag_body = self.rocket.state.truth_orientation.inv().apply(F_drag)
+
+        r_drag_body = params.CP - params.COM
+
+        tau_drag_body = np.cross(r_drag_body, F_drag_body)
+        tau_drag = self.rocket.state.truth_orientation.apply(tau_drag_body)
+
+        tau_total = tau_thrust + tau_drag #torque of gravity is zero becaus applied to COM
+        F_total = F_thrust + F_grav + F_drag
+        return F_total, tau_total
 
     def step_physics(self, env: Environment, dt: float):
-        F_total = self.compute_forces(env)
+        F_total, tau_total = self.compute_forces(env)
+
+        F_body = self.rocket.state.truth_orientation.inv().apply(F_total)
+
+        ang_accel = np.linalg.inv(params.inertia_vec) @ tau_total
 
         self.rocket.state.truth_accel = F_total / self.rocket.state.current_mass
+        self.rocket.state.truth_ang_accel = np.linalg.inv(params.inertia_vec) @ tau_total
         self.rocket.state.update_truth_state(dt, self.rocket.engine.burn_rate)
 

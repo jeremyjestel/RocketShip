@@ -172,7 +172,7 @@ class Sim:
 
 
         if self.rocket.state.current_fuel_mass <= 0:
-            self.rocket.engine.thrust_vec = np.array([0,0,0]) 
+            self.rocket.engine.fuel_empty()
 
         # Apply keyboard controls
         self.input_handler.apply_controls()
