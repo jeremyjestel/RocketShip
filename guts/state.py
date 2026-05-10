@@ -28,7 +28,7 @@ class State:
     current_fuel_mass: float = 1000
     in_flight: bool = False
 
-    def update_truth_state(self, dt, burn_rate):
+    def update_truth_state(self, dt, burn_rate, throttle):
         self.truth_vel += self.truth_accel * dt
         self.truth_pos += self.truth_vel * dt
         self.truth_pos[2] = max(0, self.truth_pos[2])
@@ -44,7 +44,7 @@ class State:
         delta_orientation = R.from_rotvec(self.truth_ang_vel * dt)
         self.truth_orientation = self.truth_orientation * delta_orientation
 
-        fuel_burned = min(max(burn_rate * dt, 0), self.current_fuel_mass)
+        fuel_burned = min(throttle * burn_rate * dt, self.current_fuel_mass)
         self.current_fuel_mass -= fuel_burned
         self.current_mass -= fuel_burned
         self.current_mass = max(self.current_mass, 0)

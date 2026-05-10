@@ -9,7 +9,7 @@ from vispy.scene.visuals import Line, Markers
 from scipy.spatial.transform import Rotation as R
 import params
 from vispy.scene import Text
-from UI.panel import Panel
+from UI.telemetry import Panel
 
 
 

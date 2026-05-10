@@ -21,8 +21,8 @@ else:
     alignment_result = R.align_vectors([v_dir], [body_forward])
     starting_orientation = alignment_result[0]
 
-burn_rate = 1000
-max_thrust = 7600000
+burn_rate = 5
+max_thrust = 20000
 dt = .01       # timestep because sim is 100 hz
 max_time = 100   # total simulation time in seconds
 drag_coefficient = .4 #ai suggested .3-.5 for rocke
@@ -87,7 +87,7 @@ h = 6
 engine_pos = np.array([0, 0, -h/2])
 
 COM = np.array([0,0,0])
-CP = np.array([0,0,.2 *h]) #move center of pressure into the physics.py with velocity adjustment
+CP = np.array([0,0,-.2 *h]) #move center of pressure into the physics.py with velocity adjustment
 
 
 Ixx = (1/12) * init_mass * (3 * radius ** 2 + h **2)
@@ -95,4 +95,5 @@ Iyy = (1/12) * init_mass * (3 * radius ** 2 + h **2)
 Izz = .5 * init_mass * radius ** 2
 
 inertia_vec = np.diag(np.array([Ixx, Iyy, Izz]))
+
 
