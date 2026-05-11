@@ -1,5 +1,5 @@
 import numpy as np
-from UI.logger import Logger
+from UI.Logger import Logger
 
 
 #gonna switch this to vispy

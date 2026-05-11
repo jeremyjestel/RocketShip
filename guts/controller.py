@@ -1,4 +1,4 @@
-from guts.rocket import Rocket
+from guts.Rocket import Rocket
 class Controller:
     def __init__(self, vehicle: Rocket):
         self.vehicle = vehicle

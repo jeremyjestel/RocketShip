@@ -1,4 +1,4 @@
-from guts.environment import Environment
+from guts.Environment import Environment
 import numpy as np
 from scipy.spatial.transform import Rotation as R
 import params
@@ -11,7 +11,7 @@ class PhysicsEngine:
     def compute_forces(self, env: Environment):
         #thrust
         thrust_body = self.rocket.engine.get_thrust()
-        r_thrust = params.engine_pos - params.COM
+        r_thrust = self.rocket.state.engine_pos - self.rocket.state.COM
         tau_thrust_body = np.cross(r_thrust, thrust_body)
         # tau_thrust = self.rocket.state.truth_orientation.apply(tau_thrust_body)
         F_thrust = self.rocket.state.truth_orientation.apply(thrust_body)
@@ -35,7 +35,7 @@ class PhysicsEngine:
 
         F_drag_body = self.rocket.state.truth_orientation.inv().apply(F_drag)
 
-        r_drag_body = params.CP - params.COM
+        r_drag_body = self.rocket.state.CP - self.rocket.state.COM
 
         tau_drag_body = np.cross(r_drag_body, F_drag_body)
         # tau_drag = self.rocket.state.truth_orientation.apply(tau_drag_body)
@@ -48,9 +48,9 @@ class PhysicsEngine:
         F_total, tau_body = self.compute_forces(env)
 
 
-        I = params.inertia_vec
+        I = self.rocket.state.I_sum
         omega = self.rocket.state.truth_ang_vel
-        self.rocket.state.truth_ang_accel = np.linalg.inv(params.inertia_vec) @ (tau_body - np.cross(omega, I @ omega))
+        self.rocket.state.truth_ang_accel = np.linalg.inv(I) @ (tau_body - np.cross(omega, I @ omega))
 
         self.rocket.state.truth_accel = F_total / self.rocket.state.current_mass
         

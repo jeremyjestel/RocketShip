@@ -5,9 +5,9 @@ class InputHandler:
     def __init__(self, rocket):
         self.rocket = rocket
         self.key_state: Dict[str, bool] = {
-            'q': False,
+            'left': False,
             'w': False,
-            'e': False,
+            'right': False,
             'a': False,
             's': False,
             'd': False,
@@ -47,9 +47,9 @@ class InputHandler:
         pitch_rate = 0.0
         yaw_rate = 0.0
 
-        if self.key_state['q']:
+        if self.key_state['left']:
             roll_rate -= params.control_sensitivity
-        if self.key_state['e']:
+        if self.key_state['right']:
             roll_rate += params.control_sensitivity
         if self.key_state['w']:
             pitch_rate -= params.control_sensitivity

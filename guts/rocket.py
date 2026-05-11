@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 import numpy as np
-from guts.state import State
-from guts.engine import Engine
+from guts.State import State
+from guts.Engine import Engine
 import params
 
 @dataclass

@@ -1,20 +1,20 @@
 # main.py
 
 import numpy as np
-from guts.state import State
-from guts.engine import Engine
-from guts.environment import Environment
-from guts.physics import PhysicsEngine
-from guts.controller import Controller
-from UI.logger import Logger
+from guts.State import State, create_default_stages
+from guts.Engine import Engine
+from guts.Environment import Environment
+from guts.Physics import PhysicsEngine
+from guts.Controller import Controller
+from UI.Logger import Logger
 from UI.visualizer import Visualizer
 from scipy.spatial.transform import Rotation as R
 from sensors.sense import Sensor
-from guts.rocket import Rocket
+from guts.Rocket import Rocket
 from sensors.estimator import Basic_Estimator
 import params
 from PyQt6.QtWidgets import QApplication
-from guts.sim import Sim
+from guts.Sim import Sim
 from UI.input_panel import InputPanel
 
 simulation = None
@@ -35,8 +35,7 @@ def create_sim():
             belief_vel=params.starting_vel.copy(),
             belief_ang_vel=params.starting_ang_vel.copy(),
             belief_orientation=params.starting_orientation,
-            current_mass=params.init_mass,
-            current_fuel_mass=params.init_mass * params.percent_fuel,
+            stages=create_default_stages(params.percent_fuel),
         ),
         engine=Engine(throttle=params.throttle, burn_rate=params.burn_rate, max_thrust = params.max_thrust),
     )

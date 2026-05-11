@@ -1,4 +1,4 @@
-from guts.rocket import Rocket
+from guts.Rocket import Rocket
 import numpy as np
 from sensors.GPS import GPS
 from sensors.gyroscope import Gyroscope
