@@ -1,15 +1,11 @@
-Z is vertical relative to surface of earth
-F5 for debug
-gravity makes z always variable
-acc is accuracy and accel is acceleration
-standardizing names to descriptor then var, truth_pos and always underscores
+I am 20 years old and work as a radar simulation engineer. My dream is to work at SpaceX if you are reading this please reach out, my email is jeremyjestel@gmail.com.
 
-RED is X BLUE is Y GREEN is Z
+This is a personal project I am creating to expand my understanding and skills in 6-DOF simulation, sensor integration, GNC, and system analysis.
 
-The lines on the missile line up as pointing to the directiont that would traverse that colors axes, hence when the rocket is pointed straight up the green line is vertical too even tho gree lines are
+The goal of this project is to mirror work being done on Starlink and Starship to one day work there.
 
-Important to remember that I am creating a model of the rocket and everything has a location and mass, just have to figure coordinate systems
+Run main.py to start the sim.
 
-Torque
-A fin is just a location with a estimated pressure amount based on the drag vector, the fin amount then has a force it applies at a specific location relative to COM, this fights inertia to chenge the angular acceleration 
-tau is torque
+Currently the sim includes a visual display of the rocket, keyboard controls, simulation stepping, state update of the rocket location and orientation, thrust vectors, and now inertial calculations. 
+
+This is very much an ongoing project specifically chosen to be modular and open ended so that I can choose new topics to learn or demonstrate skills from my job here.
